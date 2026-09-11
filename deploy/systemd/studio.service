@@ -1,0 +1,20 @@
+[Unit]
+Description=Studio (Wagtail) under Gunicorn
+After=network.target postgresql.service
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/var/studio/app
+EnvironmentFile=/var/studio/app/.env
+ExecStart=/var/studio/venv/bin/gunicorn config.wsgi:application \
+          --bind 127.0.0.1:8005 --workers 2 --timeout 60
+Restart=on-failure
+# Basic sandboxing: the app can write only to its media directory.
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/var/studio/media
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

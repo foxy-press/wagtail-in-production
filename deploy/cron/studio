@@ -1,0 +1,15 @@
+# /etc/cron.d/studio — scheduled jobs (chapter 15). Each logs to syslog with its own tag.
+SHELL=/bin/sh
+APP=/var/studio/app
+PY=/var/studio/venv/bin/python
+
+# Publish pages whose "go live" time has passed. Wagtail doesn't do this on its own.
+*/5 * * * *  www-data cd $APP && $PY manage.py publish_scheduled          2>&1 | logger -t studio-publish
+# Rebuild the search index nightly, to repair any drift (chapter 9).
+30 2 * * *   www-data cd $APP && $PY manage.py update_index -v0          2>&1 | logger -t studio-search
+# Personal data retention (chapter 5).
+0 3 * * *    www-data cd $APP && $PY manage.py purge_enquiries           2>&1 | logger -t studio-retention
+# Keep revisions for a year; Wagtail keeps the latest and any scheduled or in-workflow revision.
+0 4 * * 0    www-data cd $APP && $PY manage.py purge_revisions --days 365 2>&1 | logger -t studio-revisions
+# AI review of drafts (chapter 12).
+0 * * * *    www-data cd $APP && $PY manage.py ai_review                  2>&1 | logger -t studio-review

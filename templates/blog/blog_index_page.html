@@ -1,0 +1,4 @@
+{% extends "base.html" %}{% load wagtailcore_tags %}
+{% block content %}<h1>{{ page.hero_heading }}</h1>
+<nav>{% for topic in topics %}<a href="?topic={{ topic.slug }}">{{ topic.name }}</a> {% endfor %}</nav>
+{% for post in posts %}<article><h2><a href="{% pageurl post %}">{{ post.title }}</a></h2><p>{{ post.topic.name }} · {{ post.date }}</p><p>{{ post.intro }}</p></article>{% endfor %}{% endblock %}

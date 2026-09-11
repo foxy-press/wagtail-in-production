@@ -1,0 +1,27 @@
+{% load wagtailcore_tags wagtailuserbar seo_tags %}<!doctype html>
+<html lang="{{ page.locale.language_code|default:"en-gb" }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ page.get_meta_title }}{% endblock %}</title>
+  {% if page %}
+  <meta name="description" content="{{ page.get_meta_description }}">
+  {% with translations=page.get_translations.live %}{% if translations %}
+  <link rel="alternate" hreflang="{{ page.locale.language_code }}" href="{% fullpageurl page %}">
+  {% for translation in translations %}<link rel="alternate" hreflang="{{ translation.locale.language_code }}" href="{% fullpageurl translation %}">
+  {% endfor %}<link rel="alternate" hreflang="x-default" href="{% if page.locale.is_default %}{% fullpageurl page %}{% else %}{% for t in translations %}{% if t.locale.is_default %}{% fullpageurl t %}{% endif %}{% endfor %}{% endif %}">
+  {% endif %}{% endwith %}
+  <link rel="canonical" href="{% fullpageurl page %}">
+  <meta property="og:title" content="{{ page.get_meta_title }}">
+  <meta property="og:description" content="{{ page.get_meta_description }}">
+  <meta property="og:url" content="{% fullpageurl page %}">
+  {% og_image_url page as og_image %}{% if og_image %}<meta property="og:image" content="{{ og_image }}">{% endif %}
+  {% for item in page.get_structured_data %}{{ item|jsonld }}{% endfor %}
+  {% endif %}
+</head>
+<body>
+  {% wagtailuserbar %}
+  <main>{% block content %}{% endblock %}</main>
+  <footer style="border-top: 4px solid {{ settings.core.BrandSettings.accent_colour }}">{{ settings.core.BrandSettings.brand_name }} · {{ settings.core.SiteSettings.organisation_name }}</footer>
+</body>
+</html>

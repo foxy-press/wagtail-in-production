@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% load wagtailcore_tags %}
+{% block title %}Search{% if query %}: {{ query }}{% endif %}{% endblock %}
+{% block content %}
+<h1>Search</h1>
+<form action="" method="get" role="search"><input type="search" name="q" value="{{ query }}" aria-label="Search the site"><button>Search</button></form>
+{% if promotions %}<ul class="promoted">{% for pick in promotions %}<li><a href="{% if pick.page %}{% pageurl pick.page %}{% else %}{{ pick.external_link_url }}{% endif %}">{% if pick.page %}{{ pick.page.title }}{% else %}{{ pick.external_link_text }}{% endif %}</a> {{ pick.description }}</li>{% endfor %}</ul>{% endif %}
+{% if query %}
+  <p>{{ results.paginator.count }} result{{ results.paginator.count|pluralize }} for “{{ query }}”</p>
+  <ol>{% for result in results %}<li><a href="{% pageurl result %}">{{ result.title }}</a> {{ result.get_meta_description }}</li>{% endfor %}</ol>
+  {% if results.has_next %}<a href="?q={{ query|urlencode }}&page={{ results.next_page_number }}">More results</a>{% endif %}
+{% endif %}
+{% endblock %}

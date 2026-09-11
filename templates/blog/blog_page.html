@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% load wagtailcore_tags wagtail_cache %}
+{% block content %}<article><h1>{{ page.title }}</h1><p>{{ page.intro }}</p><p>{{ page.read_minutes }} min read</p>
+<nav>{% for anchor, text in page.toc %}<a href="#{{ anchor }}">{{ text }}</a> {% endfor %}</nav>
+{% wagtailpagecache 3600 "post-body" %}{% include_block page.body %}{% endwagtailpagecache %}
+{% if page.faqs %}<section id="faq">{% for block in page.faqs %}<h3>{{ block.value.question }}</h3><p>{{ block.value.answer }}</p>{% endfor %}</section>{% endif %}</article>
+<aside>{% for post in related %}<a href="{% pageurl post %}">{{ post.title }}</a>{% endfor %}</aside>{% endblock %}

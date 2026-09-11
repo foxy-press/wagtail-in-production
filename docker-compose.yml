@@ -1,0 +1,27 @@
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: studio
+      POSTGRES_USER: studio
+      POSTGRES_PASSWORD: studio
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U studio"]
+      interval: 2s
+      retries: 15
+
+  web:
+    build: .
+    environment:
+      DEBUG: "0"
+      SECRET_KEY: ${SECRET_KEY:?set SECRET_KEY}
+      ALLOWED_HOSTS: localhost
+      SITE_URL: http://localhost:8000
+      POSTGRES_DB: studio
+      POSTGRES_USER: studio
+      POSTGRES_PASSWORD: studio
+      POSTGRES_HOST: db
+    ports: ["${WEB_PORT:-8000}:8000"]
+    depends_on:
+      db:
+        condition: service_healthy

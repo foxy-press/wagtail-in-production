@@ -1,0 +1,3 @@
+{% extends "base.html" %}{% load wagtailcore_tags %}
+{% block content %}<h1>{{ page.hero_heading }}</h1>
+<ul>{% for service in services %}<li><a href="{% pageurl service %}">{{ service.title }}</a></li>{% endfor %}</ul>{% endblock %}

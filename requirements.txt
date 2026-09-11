@@ -1,0 +1,9 @@
+# Pinned to the versions the book was tested against. The v3 API is a preview: upgrade Wagtail deliberately.
+wagtail==8.0.1
+Django>=5.2,<5.3
+Pygments==2.21.0
+beautifulsoup4==4.15.0
+anthropic==2.3.0
+# Production (chapter 15)
+gunicorn==26.2.0
+psycopg[binary]==3.3.6

@@ -1,0 +1,1 @@
+{% load wagtailimages_tags %}<figure>{% if value.decorative %}{% picture value.image format-{avif,webp,jpeg} width-1200 alt="" loading="lazy" %}{% else %}{% picture value.image format-{avif,webp,jpeg} width-1200 alt=value.alt loading="lazy" %}{% endif %}{% if value.caption %}<figcaption>{{ value.caption }}</figcaption>{% endif %}</figure>
