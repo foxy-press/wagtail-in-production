@@ -9,7 +9,6 @@ from wagtail.api.v3.urls import api as api_v3
 
 from config.api import api_router
 from core import search
-from core.sitemaps import TranslatedSitemap
 from core.views_seo import robots_txt
 from wagtail.documents import urls as wagtaildocs_urls
 
@@ -17,7 +16,7 @@ urlpatterns = [
     path("django-admin/", admin.site.urls),
     path(settings.WAGTAIL_ADMIN_PATH, include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
-    path("sitemap.xml", sitemap, {"sitemaps": {"pages": TranslatedSitemap}}),
+    path("sitemap.xml", sitemap),
     path("robots.txt", robots_txt),
     # The docs suggest this mount while v3 is a preview, so clients know it may change.
     path("api/v3-preview/", api_v3.urls),

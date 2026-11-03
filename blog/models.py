@@ -125,7 +125,10 @@ class BlogPage(BasePage):
 
     def get_sitemap_urls(self, request=None):
         # Tell search engines when the content really changed, not when someone last clicked Publish.
-        return [{"location": self.get_full_url(request), "lastmod": self.updated or self.date}]
+        # Start from Wagtail's entry, so it keeps the links to this page's translations.
+        urls = super().get_sitemap_urls(request)
+        urls[0]["lastmod"] = self.updated or self.date
+        return urls
 
     def get_faqs(self):
         return super().get_faqs() or body_faqs(self.body)
