@@ -7,7 +7,7 @@ This repository holds the finished project, with the code and tests from all cha
 ## Requirements
 
 - Python 3.11 or later
-- Wagtail 8.0 and Django 5.2 (pinned in `requirements.txt`)
+- Wagtail 8.1 and Django 5.2 (pinned in `requirements.txt`)
 - Node 24, only for the headless front-end build (chapter 7)
 
 ## Run it

@@ -85,7 +85,8 @@ class SitemapRobotsRedirectTests(SeededSiteTestCase):
         welsh = post.copy_for_translation(Locale.objects.create(language_code="cy"), copy_parents=True)
         welsh.save_revision().publish()
         xml = self.client.get("/sitemap.xml").content.decode()
-        self.assertIn("http://localhost/cy/writing/testing-every-live-page/", xml)
+        self.assertIn("<loc>http://localhost/cy/writing/testing-every-live-page/</loc>", xml)
+        self.assertIn('hreflang="cy" href="http://localhost/cy/writing/testing-every-live-page/"', xml)
 
     def test_robots_points_at_this_sites_sitemap(self):
         call_command("add_site", "labs.localhost", name="Studio Labs", stdout=StringIO())
@@ -101,3 +102,12 @@ class SitemapRobotsRedirectTests(SeededSiteTestCase):
         self.assertTrue(Redirect.objects.filter(old_path="/writing/testing-every-live-page").exists())
         response = self.client.get("/writing/testing-every-live-page/")
         self.assertRedirects(response, "/writing/test-every-live-page/", status_code=301, fetch_redirect_response=False)
+
+    def test_renaming_a_draft_creates_no_redirect(self):
+        # Since 8.1, only live pages get automatic redirects: a draft's old URL was never public.
+        post = BlogPage.objects.get(slug="testing-every-live-page")
+        post.unpublish()
+        post.slug = "test-every-live-page"
+        with self.captureOnCommitCallbacks(execute=True):
+            post.save()
+        self.assertFalse(Redirect.objects.filter(old_path="/writing/testing-every-live-page").exists())
